@@ -15,7 +15,9 @@ def write_output(args, output):
 
     if args.output_into_subfolders:
         folders = [f[0] for f in os.walk(args.output_path)]
-        folders.remove('.')
+
+        if '.' in folders:
+            folders.remove('.')
 
     if not args.output_into_subfolders or len(folders) == 0:
         folders = [args.output_path]
