@@ -91,7 +91,7 @@ def wait_for_device(args):
                            stdout=subprocess.PIPE)
         out = p.stdout.decode()
 
-        # When the device is slow to respond because it's still spinning up
+        # the device may be slow to respond if it's still spinning up
         for line in out:
             if line.strip() == 'Read Device Identity failed: scsi error device will be ready soon':
                 return False
@@ -105,7 +105,7 @@ def wait_for_device(args):
         count += 1
 
         if count == 20:
-            write_output(args, 'Device not ready after 1 minutes.')
+            write_output(args, 'Device not ready after 1 minute. Exiting.')
             sys.exit()
 
 
@@ -123,7 +123,7 @@ def selftest_is_running(args):
 
 
 def start_selftest(args):
-    """Starts a self test and returns if it was started successfully."""
+    """Starts a self test. The function exits if it was not started successfully."""
     p = subprocess.run(['smartctl', '-t', args.type, args.device],
                        stdout=subprocess.PIPE)
     out = p.stdout.decode().splitlines()
@@ -150,7 +150,7 @@ if __name__ == '__main__':
         write_output(args, 'A self test is already in progress.')
 
         if not args.allow_existing:
-            write_output(args, 'Parameter allow_existing is False, exiting.')
+            write_output(args, 'Parameter allow_existing is False. Exiting.')
             sys.exit()
     else:
         start_selftest(args)
