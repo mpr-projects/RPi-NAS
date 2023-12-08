@@ -89,7 +89,7 @@ def wait_for_device(args):
     """Waits until device is ready, exits if not ready after 1 minute."""
 
     def check():
-        p = subprocess.run(['smartctl', '-c', args.device],
+        p = subprocess.run(['/usr/sbin/smartctl', '-c', args.device],
                            stdout=subprocess.PIPE)
         out = p.stdout.decode()
 
@@ -113,7 +113,7 @@ def wait_for_device(args):
 
 def selftest_is_running(args):
     """Returns True if a self test is running and false otherwise."""
-    p = subprocess.run(['smartctl', '-c', args.device], stdout=subprocess.PIPE)
+    p = subprocess.run(['/usr/sbin/smartctl', '-c', args.device], stdout=subprocess.PIPE)
     out = p.stdout.decode().splitlines()
 
     for line in out:
@@ -126,7 +126,7 @@ def selftest_is_running(args):
 
 def start_selftest(args):
     """Starts a self test. The function exits if it was not started successfully."""
-    p = subprocess.run(['smartctl', '-t', args.type, args.device],
+    p = subprocess.run(['/usr/sbin/smartctl', '-t', args.type, args.device],
                        stdout=subprocess.PIPE)
     out = p.stdout.decode().splitlines()
 
@@ -139,7 +139,7 @@ def start_selftest(args):
 
 
 def save_status(args):
-    p = subprocess.run(['smartctl', '-x', args.device], stdout=subprocess.PIPE)
+    p = subprocess.run(['/usr/sbin/smartctl', '-x', args.device], stdout=subprocess.PIPE)
     write_output(args, p.stdout.decode())
 
 
