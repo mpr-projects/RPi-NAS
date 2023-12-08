@@ -119,9 +119,6 @@ def selftest_is_running(args):
             if line.strip().endswith('Self-test routine in progress...'):
                 return True
             return False
-
-        if line.startswith('Someting device not ready'):
-            return False
     return False
 
 
