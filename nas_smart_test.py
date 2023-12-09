@@ -24,9 +24,12 @@ def write_output(args, output):
         folders = [args.output_path]
 
     for folder in folders:
-        with open(os.path.join(folder, fname), 'a') as f:
+        fname_ = os.path.join(folder, fname)
+        with open(os.path.join(folder, fname_), 'a') as f:
             f.write(output)
             f.write('\n')
+            
+        os.chmod(fname_, 777)
 
 
 def parse_arguments():
