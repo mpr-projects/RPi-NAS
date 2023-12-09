@@ -14,7 +14,8 @@ def write_output(args, output):
             + args.device.replace('/', '_')
 
     if args.output_into_subfolders:
-        folders = [f[0] for f in os.walk(args.output_path)]
+        folders = [f for f in os.listdir(args.output_path)
+                   if os.path.isdir(os.path.join(args.output_path, f))]
 
         if '.' in folders:
             folders.remove('.')
