@@ -36,6 +36,8 @@ fan_on_min = 30 # °C, below this temperature the fan will be off
 fan_on_max = 40  # °C, at and above this temperature the fan will be at max (3.3V)
 update_sec = 1  # number of seconds between subsequent updates
 
+min_dc = 0.45  # below a certain dutycycle the fan doesn't move, at the min temperature we need at least this dc value
+temp_buffer = 2  # °C to go below fan_on_min when cooling (so the fan doesn't contantly turn on and off
 pwm_pin = 12
 
 # set up temperature sensor
@@ -53,21 +55,25 @@ def set_fan(dutycycle):
 
 set_fan(0)
 dc_prev = 0
+is_cooling = False
 
 
 while True:
     temp = sensor.temperature
 
-    if temp < fan_on_min:
+    if temp < fan_on_min - (temp_buffer if is_cooling else 0):
         dc = 0
+        is_cooling = False
 
     elif temp > fan_on_max:
         dc = 1
+        is_cooling = True
 
     else:  # scale fan speed linearly with temperature
-        dc = (temp - fan_on_min) / (fan_on_max - fan_on_min)
+        dc = min_dc + max(0, (1 - min_dc) * (temp - fan_on_min) / (fan_on_max - fan_on_min))
+        is_cooling = True
 
-    print(f'\nTemperature: {temp:.2f}, Dutycycle: {dc:.2f}')
+    print(f'\nTemperature: {temp:.2f}, Dutycycle: {dc:.2f}', dc)
 
     # only adjust fan speed for significant temperature changes
     if abs(dc - dc_prev) > 0.05:
